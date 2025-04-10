@@ -7,42 +7,44 @@ const upload = multer();
 const productRoute = require('./routes/api/productRoute');
 
 // Connecting to the Database
-let mongodb_url = 'mongodb://localhost/';
+// Use the MongoDB service name from docker-compose (e.g., app-mongo)
+let mongodb_url = 'mongodb://app-mongo:27017/';
 let dbName = 'yolomy';
 
-// define a url to connect to the database
-const MONGODB_URI = process.env.MONGODB_URI || mongodb_url + dbName
-mongoose.connect(MONGODB_URI,{useNewUrlParser: true, useUnifiedTopology: true  } )
+const MONGODB_URI = process.env.MONGODB_URI || mongodb_url + dbName;
+
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+
 let db = mongoose.connection;
 
 // Check Connection
-db.once('open', ()=>{
-    console.log('Database connected successfully')
-})
+db.once('open', () => {
+    console.log('Database connected successfully');
+});
 
 // Check for DB Errors
-db.on('error', (error)=>{
-    console.log(error);
-})
+db.on('error', (error) => {
+    console.error('Database connection error:', error);
+});
 
 // Initializing express
-const app = express()
+const app = express();
 
 // Body parser middleware
-app.use(express.json())
+app.use(express.json());
 
-// 
-app.use(upload.array()); 
+// Enable file uploads
+app.use(upload.array());
 
-// Cors 
+// Enable CORS
 app.use(cors());
 
-// Use Route
-app.use('/api/products', productRoute)
+// Use Routes
+app.use('/api/products', productRoute);
 
 // Define the PORT
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, ()=>{
-    console.log(`Server listening on port ${PORT}`)
-})
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
+});
