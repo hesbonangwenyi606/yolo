@@ -4,30 +4,22 @@ const cors = require('cors');
 const multer = require('multer');
 const upload = multer();
 
+// Import Routes
 const productRoute = require('./routes/api/productRoute');
 
-// Connecting to the Database
-// Use the MongoDB service name from docker-compose (e.g., app-mongo)
+// Set up MongoDB URI
 let mongodb_url = 'mongodb://app-mongo:27017/';
 let dbName = 'yolomy';
 
-const MONGODB_URI = process.env.MONGODB_URI || mongodb_url + dbName;
+// Using the MongoDB URI from the environment variables
+const MONGODB_URI = process.env.MONGODB_URI || `${mongodb_url}${dbName}`;
 
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+// Connecting to MongoDB
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Database connected successfully'))
+  .catch((err) => console.log('Database connection error:', err));
 
-let db = mongoose.connection;
-
-// Check Connection
-db.once('open', () => {
-    console.log('Database connected successfully');
-});
-
-// Check for DB Errors
-db.on('error', (error) => {
-    console.error('Database connection error:', error);
-});
-
-// Initializing express
+// Initializing Express
 const app = express();
 
 // Body parser middleware
@@ -42,7 +34,7 @@ app.use(cors());
 // Use Routes
 app.use('/api/products', productRoute);
 
-// Define the PORT
+// Define the PORT from environment variables, fallback to 5000 if not provided
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
