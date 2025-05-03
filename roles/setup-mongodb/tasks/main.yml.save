@@ -17,16 +17,6 @@
     name: app-net
     state: present
 
-- name: Create Docker network
-  community.docker.docker_network:
-    name: app-net
-    state: present
-
-- name: Create Docker network
-  community.docker.docker_network:
-    name: app-net
-    state: present
-
 - name: Run MongoDB Container
   community.docker.docker_container:
     name: mongodb
@@ -39,4 +29,3 @@
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
-
