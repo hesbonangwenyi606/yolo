@@ -1,0 +1,4 @@
+- name: Create Docker network "app-net"
+  docker_network:
+    name: app-net
+    state: present
