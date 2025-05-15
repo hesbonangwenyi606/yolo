@@ -1,0 +1,29 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install MongoDB
+  apt:
+    name: mongodb
+    state: present
+
+- name: Ensure MongoDB is started and enabled
+  service:
+    name: mongodb
+    state: started
+    enabled: yes
+
+- name: Configure MongoDB bind IP
+  lineinfile:
+    path: /etc/mongodb.conf  # Default path on Ubuntu, adjust if needed
+    regexp: '^bind_ip'
+    line: "bind_ip = {{ mongodb_bind_ip }}"
+  notify: restart mongodb
+
+- name: Configure MongoDB port
+  lineinfile:
+    path: /etc/mongodb.conf
+    regexp: '^port'
+    line: "port = {{ mongodb_port }}"
+  notify: restart mongodb

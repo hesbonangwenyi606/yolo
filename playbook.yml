@@ -1,9 +1,17 @@
 ---
-- name: Ansible playbook to dockerize and run yolo e-commerce app using ansible
+- name: Start MongoDB container on app-net network
   hosts: all
   become: true
-  roles: 
-    - frontend-deployment
-    - setup-mongodb   
-    - backend-deployment
-    
+
+  tasks:
+    - name: Run MongoDB Container
+      docker_container:
+        name: mongodb
+        image: mongo:latest
+        state: started
+        restart_policy: always
+        published_ports:
+          - "27018:27017"  # Host port 27018 maps to container 27017
+        networks:
+          - name: app-net
+

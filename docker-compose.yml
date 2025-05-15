@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: yolo-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    restart: unless-stopped
+
+  yolo-backend:
+    build: ./backend
+    container_name: yolo-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/yolo_db
+    depends_on:
+      - mongo
+    networks:
+      - yolo-net
+
+  yolo-client:
+    build: ./frontend
+    container_name: yolo-client
+    ports:
+      - "3000:3000"
+    depends_on:
+      - yolo-backend
+    networks:
+      - yolo-net
+
+volumes:
+  mongo-data:
+
+networks:
+  yolo-net:

@@ -1,12 +1,17 @@
----
-- name: Run MongoDB Container
-  docker_container:
-    name: app-mongo
-    image: mongo
+- name: Create Docker network for app
+  community.docker.docker_network:
+    name: app-net
+    state: present
+
+- name: Run MongoDB container
+  community.docker.docker_container:
+    name: mongodb
+    image: mongo:latest
+    state: started
+    restart_policy: always
+    recreate: false
     ports:
-      - '27017:27017'
-    volumes:
-      - ./app-mongo-data:/data/db
+      - "27017:27017"
     networks:
       - name: app-net
   tags:

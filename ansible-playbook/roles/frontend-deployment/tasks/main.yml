@@ -1,0 +1,16 @@
+---
+- name: Deploy frontend application
+  git:
+    repo: "{{ frontend_repo_url }}"
+    dest: "/opt/frontend"
+    version: "{{ frontend_branch }}"
+
+- name: Install required dependencies
+  command: "npm install"
+  args:
+    chdir: "/opt/frontend"
+
+- name: Start frontend application
+  command: "npm start"
+  args:
+    chdir: "/opt/frontend"
