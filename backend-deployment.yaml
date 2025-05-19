@@ -17,8 +17,6 @@ spec:
       containers:
         - name: backend
           image: brianbwire/brian-yolo-backend:v1.0.0
-          command: ["npm", "start"] 
-          ports:
             - containerPort: 5000
           resources:
             limits:
